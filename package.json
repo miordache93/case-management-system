@@ -5,6 +5,7 @@
   "dependencies": {
     "@emotion/react": "^11.13.0",
     "@emotion/styled": "^11.13.0",
+    "@mui/icons-material": "^5.16.7",
     "@mui/material": "^5.16.7",
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
@@ -14,6 +15,8 @@
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
     "axios": "^1.7.3",
+    "clsx": "^2.1.1",
+    "http-proxy-middleware": "^3.0.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-router-dom": "^6.26.0",
@@ -23,7 +26,7 @@
     "zustand": "^4.5.4"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "PORT=3003 react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
@@ -45,5 +48,6 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  }
+  },
+  "proxy": "http://localhost:3000"
 }
