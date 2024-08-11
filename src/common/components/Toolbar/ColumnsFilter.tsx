@@ -57,7 +57,7 @@ const ColumnsFilter: React.FunctionComponent<ColumnsFilterProps> = ({
               onClick={() => toggleColumnVisibility(column)}
             >
               <Checkbox 
-                checked={column.visible} 
+                checked={!column.hidden} 
               />
               {column.title.toUpperCase()}
             </MenuItem>
