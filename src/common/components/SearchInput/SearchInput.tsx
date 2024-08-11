@@ -1,16 +1,17 @@
-import { ChangeEvent, FunctionComponent } from 'react';
+import { ChangeEvent, FunctionComponent, useState } from 'react';
 import type { InputBaseProps } from '@mui/material/InputBase/InputBase';
 import SearchIcon from '@mui/icons-material/Search';
-import { InputBase, styled, alpha, Button, Box, TextField } from '@mui/material';
+import { styled, Button, TextField } from '@mui/material';
 
 interface SearchInputProps extends InputBaseProps {
-  onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
+  onChange?: (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
+  onSearch: (value: string) => void;
   value?: string;
   defaultValue?: string;
   placeholder?: string;
 }
 
-const StyledTextField = styled(TextField)(({ theme }) => `
+const StyledTextField = styled(TextField)(() => `
   font-family: 'Inter';
 
   .MuiInputBase-root {
@@ -29,20 +30,29 @@ const StyledTextField = styled(TextField)(({ theme }) => `
 
 const SearchInput: FunctionComponent<SearchInputProps> = ({
   onChange,
+  onSearch,
   value,
   ...props
 }) => {
+  const [text, setText] = useState(value || '');
+
   return (
     <StyledTextField
       placeholder={props.placeholder || 'Search…'}
-      onChange={onChange}
+      onChange={(e) => {
+        setText(e.target.value);
+
+        if (onChange) {
+          onChange?.(e);
+        }
+      }}
       variant='outlined'
-      value={value}
+      value={text || ''}
       InputProps={ {
         startAdornment: (
           <SearchIcon />
         ),
-        endAdornment:  <Button variant='contained'> Search </Button> 
+        endAdornment:  <Button variant='contained' onClick={() => onSearch(text)}> Search </Button> 
       }}
     />
   );

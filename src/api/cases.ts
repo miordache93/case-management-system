@@ -8,7 +8,7 @@ export const fetchCasesApi = async (query: PaginatedQuery): Promise<PaginatedDat
 };
 
 // Update case status
-export const updateCaseStatusApi = async (caseName: string, status: string): Promise<Case> => {
-  const response = await axios.put<Case>('/update-status', { caseName, status });
+export const updateCaseStatusApi = async (ids: string[], status: string): Promise<Case> => {
+  const response = await axios.put<Case>('/update-status', { ids, status });
   return response.data;
 };

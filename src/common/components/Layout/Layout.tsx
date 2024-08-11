@@ -1,6 +1,6 @@
 import React from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom'; 
-import { Box, Drawer, List, ListItemButton, ListItemIcon, ListItemText, Toolbar} from '@mui/material';
+import { Box, Drawer, List, ListItemButton, ListItemIcon, ListItemText} from '@mui/material';
 import PendingOutlinedIcon from '@mui/icons-material/PendingOutlined';
 import CheckCircleOutlineOutlinedIcon from '@mui/icons-material/CheckCircleOutlineOutlined';
 import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
@@ -32,19 +32,19 @@ const MainLayout: React.FC = () => {
               </ListItemIcon>
               <ListItemText primary="All Cases" />
             </ListItemButton>
-            <ListItemButton onClick={ () => navigate('/cases?status=in progress')} selected={ status === 'in progress'}>
+            <ListItemButton onClick={ () => navigate('/cases?status=In progress')} selected={ status === 'In progress'}>
               <ListItemIcon>
                 <PendingOutlinedIcon />
               </ListItemIcon>
               <ListItemText primary="Pending Cases" />
             </ListItemButton>
-            <ListItemButton onClick={ () => navigate('/cases?status=accepted')} selected={ status === 'accepted'}>
+            <ListItemButton onClick={ () => navigate('/cases?status=Accepted')} selected={ status === 'Accepted'}>
               <ListItemIcon>
                 <CheckCircleOutlineOutlinedIcon />
               </ListItemIcon>
               <ListItemText primary="Accepted Cases" />
             </ListItemButton>
-            <ListItemButton onClick={ () => navigate('/cases?status=rejected')} selected={ status === 'rejected'}>
+            <ListItemButton onClick={ () => navigate('/cases?status=Rejected')} selected={ status === 'Rejected'}>
               <ListItemIcon>
                 <CancelOutlinedIcon />
               </ListItemIcon>

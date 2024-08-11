@@ -78,11 +78,18 @@ export interface TableProps<T, K extends string = string> {
     columns: ReadonlyArray<Column<T, K>>;
     className?: string;
     items: ReadonlyArray<T>;
+    selectedItems?: string[];
     rowActions?: ReadonlyArray<TableRowAction<T>>;
     isLoading?: boolean;
+    enableSelection?: boolean;
     handleRowClick?: (item: T) => void;
     filters?: any;
     compactMode?: boolean;
+    count: number;
+    onPageChange: (pageNumber: number) => void;
+    onSelectAll?: (checked: boolean) => void;
+    onSelectionChange?: (item: T) => void;
+    onSort?: (columnId: string, order: 'desc' | 'asc') => void;
 };
 
 

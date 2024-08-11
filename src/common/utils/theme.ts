@@ -3,7 +3,6 @@ import { createTheme } from '@mui/material/styles';
 const theme = createTheme({
   palette: {
     action: {
-      disabled: '#FFFFFF',
       disabledBackground: '#7D90B2',
     },
     primary: {
@@ -18,8 +17,10 @@ const theme = createTheme({
       default: '#FFFFFF',
     },
     text: {
-      primary: '#00000',
-    }
+      primary: '#2E3B52',
+      secondary: '#7D90B2',
+    },
+    
   },
   typography: {
     allVariants: {
@@ -95,6 +96,48 @@ const theme = createTheme({
           backgroundColor: '#F4F7FC',
           color: '#606F89',
           height: 40,
+        },
+      },
+    },
+    MuiTableRow: {
+      styleOverrides: {
+        root: {
+          '&.header-row': {
+            height: 40,
+            backgroundColor: '#F4F7FC',
+          },
+
+          '&:not(.header-row)': {
+            '&:nth-child(odd)': {
+              backgroundColor: '#FFFFFF', 
+            },
+            '&:nth-child(even)': {
+              backgroundColor: '#F4F7FC',
+            },
+          }
+        }
+      }
+    },
+    MuiTableCell: {
+      styleOverrides: {
+        root: {
+          height: 40,
+          // textWrap: 'nowrap',
+          // whiteSpace: 'nowrap',
+          // overflow: 'hidden',
+          // textOverflow: 'ellipsis',
+        }
+      }
+    },
+    MuiTableSortLabel: {
+      styleOverrides: {
+        root: {
+          color: '#606F89',
+          fontWeight: 500,
+
+          '&:hover': {
+            color: '#0A65FF',
+          },
         },
       },
     },

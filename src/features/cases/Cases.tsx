@@ -1,20 +1,21 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import {  Button, Chip, Grid, Typography, useTheme } from '@mui/material';
+import { Grid, Typography, useTheme } from '@mui/material';
 
 import { useCaseStore } from './store';
 import { Case, CasePriority, CaseStatus, PaginatedQuery } from './types';
 import { CASES_STATUS_LABEL } from './constants';
 import Toolbar from 'src/common/components/Toolbar/Toolbar';
 import Table from 'src/common/components/Table/Table';
-import { Column, ItemRendererArgs, TableRowAction } from 'src/common/components/Table/types';
+import { Column, TableRowAction } from 'src/common/components/Table/types';
 import Badge from 'src/common/components/Badge/Badge';
 
 const CasesPage: React.FC = () => {
   const theme = useTheme();
   const [searchParams, setSearchParams] = useSearchParams();
   const status = searchParams.get('status') || '';
-  const { paginatedData, fetchCases } = useCaseStore();
+  const [selectedItemIds, setSelectedItemIds] = useState<string[]>([]);
+  const { paginatedData, fetchCases, updateCaseStatus } = useCaseStore();
 
   const paginatedQuery: PaginatedQuery = useMemo<PaginatedQuery>(() => ({
     search: searchParams.get('search') || '',
@@ -29,6 +30,8 @@ const CasesPage: React.FC = () => {
     setSearchParams({
       page: paginatedQuery.page?.toString() || '1',
       limit: paginatedQuery.limit?.toString() || '10',
+      sort: paginatedQuery.sort || '',
+      order: paginatedQuery.order || 'desc',
       ...(paginatedQuery.search && { search:  paginatedQuery.search }) || {},
       ...(paginatedQuery.status && { status: paginatedQuery.status }) || {},
     });
@@ -42,6 +45,7 @@ const CasesPage: React.FC = () => {
       id: 'priority',
       dataPath: 'priority',
       title: 'Priority',
+      sortable: true,
       width: 200,
       // @ts-ignore
       cellRenderer: ({ item }) => (
@@ -56,25 +60,29 @@ const CasesPage: React.FC = () => {
       id: 'caseName',
       dataPath: 'caseName',
       title: 'Case Name',
+      sortable: true,
       width: 200,
     },
     {
       id: 'assignee',
       dataPath: 'assignee',
       title: 'Assignee',
+      sortable: true,
       width: 200,
     },
     {
       id: 'description',
       dataPath: 'description',
       title: 'Description',
-      width: 200
+      sortable: true,
+      width: 800
     }, 
     // @ts-ignore
     {
       id: 'status',
       dataPath: 'status',
       title: 'Status',
+      sortable: true,
       width: 200,
       // @ts-ignore
       cellRenderer: ({ item }) => (
@@ -91,6 +99,7 @@ const CasesPage: React.FC = () => {
       id: 'type',
       dataPath: 'type',
       title: 'Type',
+      sortable: true,
       width: 200,
       // @ts-ignore
       cellRenderer: ({ item }) => (
@@ -105,6 +114,7 @@ const CasesPage: React.FC = () => {
     {
       id: 'dateCreated',
       dataPath: 'dateCreated',
+      sortable: true,
       title: 'Date Created',
       width: 200
     },
@@ -112,6 +122,7 @@ const CasesPage: React.FC = () => {
       id: 'lastUpdated',
       dataPath: 'lastUpdated',
       title: 'Last Updated',
+      sortable: true,
       width: 200
     },
   ], []);
@@ -120,19 +131,25 @@ const CasesPage: React.FC = () => {
     {
         name: 'Accept case',
         onAction: (e, item) => {
-            // accept case
+          updateCaseStatus([item.caseName], CaseStatus.ACCEPTED);
         },
     },
     {
         name: 'Reject case',
         onAction: (e, item) => {
-           // reject case
+          updateCaseStatus([item.caseName], CaseStatus.REJECTED);
         }
     },
-];
+  ];
+
+  const handleSort = (columnId: string, order: 'desc' | 'asc') => {
+    searchParams.set('sort', columnId);
+    searchParams.set('order', order);
+    setSearchParams(searchParams);
+  };
 
   return (
-    <Grid container flexDirection='column' mt={2} rowGap={2}>
+    <Grid container flexDirection='column' mt={2} rowGap={2} >
       <Grid item mb={1}>
         <Typography variant='h1' fontSize={24}>
           { status ? CASES_STATUS_LABEL[status as CaseStatus ] : 'All Cases' }
@@ -141,19 +158,45 @@ const CasesPage: React.FC = () => {
       <Grid item width='100%'>
         <Toolbar
           columns={columns}
-          searchText=''
-          onSearch={ () => {} }
-          selectedCases={[]}
+          searchText={paginatedQuery.search || ''}
+          onSearch={ (searchText) => {
+            searchParams.set('search', searchText);
+            setSearchParams(searchParams);
+          } }
+          enableBatchActions={selectedItemIds.length > 1 }
+          onAcceptCases={ () => updateCaseStatus(selectedItemIds, CaseStatus.ACCEPTED) }
+          onRejectCases={ () => updateCaseStatus(selectedItemIds, CaseStatus.REJECTED) }
           toggleColumnVisibility={ () => {} }
         />
       </Grid>
-      <Grid item width='100%'>
+      <Grid item width='calc(100vw - 260px)'>
         <Table
+          enableSelection
           items={paginatedData.data}
+          selectedItems={ selectedItemIds }
           columns={columns}
           filters={paginatedQuery}
           rowActions={actions}
           compactMode
+          count={ paginatedData.total}
+          onSort={ handleSort }
+          onPageChange={ (pageNumber) => {
+            searchParams.set('page', pageNumber.toString());
+            setSearchParams(searchParams);
+          }}
+          onSelectAll={ (selection) => {
+            if (selection) {
+              setSelectedItemIds(paginatedData.data.map((item) => item.caseName));
+            } else {
+              setSelectedItemIds([]);
+          } }}
+          onSelectionChange={ (item: Case) => {
+            if (selectedItemIds.includes(item.caseName)) {
+              setSelectedItemIds(selectedItemIds.filter((id) => id !== item.caseName));
+            } else {
+              setSelectedItemIds([...selectedItemIds, item.caseName]);
+            }
+          }}
         />
       </Grid>
     </Grid>

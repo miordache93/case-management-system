@@ -8,7 +8,7 @@ interface CaseState {
   loading: boolean;
   error: string | null;
   fetchCases: (query: PaginatedQuery) => void;
-  updateCaseStatus: (caseName: string, status: CaseStatus) => void;
+  updateCaseStatus: (cases: string[], status: CaseStatus) => void;
 }
 
 const initialState: CaseState = {
@@ -35,17 +35,27 @@ export const useCaseStore = create<CaseState>((set) => ({
       set({ error: error.message, loading: false });
     }
   },
-  updateCaseStatus: async (caseName, status) => {
+  updateCaseStatus: async (cases, status) => {
     set({ loading: true });
     try {
-      await updateCaseStatusApi(caseName, status);
+      await updateCaseStatusApi(cases, status);
 
-      set((state) => ({
-        cases: state.paginatedData.data.map((caseItem: Case) =>
-          caseItem.caseName === caseName ? { ...caseItem, status } : caseItem
-        ),
-        loading: false,
-      }));
+      set((state) => {
+        const updatedData = state.paginatedData.data.map((item) => {
+          if (cases.includes(item.caseName)) {
+            return { ...item, status };
+          }
+          return item;
+        });
+
+        return {
+          paginatedData: {
+            ...state.paginatedData,
+            data: updatedData,
+          },
+          loading: false,
+        };
+      });
     } catch (error: any) {
       set({ error: error.message, loading: false });
     }
