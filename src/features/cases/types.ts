@@ -26,7 +26,7 @@ export interface Case {
 export interface PaginatedQuery {
   search?: string;
   sort?: string;
-  order?: string;
+  order?: 'asc' | 'desc';
   page?: number;
   limit?: number;
   status?: string;

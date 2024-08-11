@@ -24,8 +24,7 @@ const MainLayout: React.FC = () => {
           [`& .MuiDrawer-paper`]: { width: drawerWidth, boxSizing: 'border-box' },
         }}
       >
-        <Toolbar />
-        <Box sx={{ overflow: 'auto' }} mr={ 2 }>
+        <Box sx={{ overflow: 'auto' }} mr={ 2 } mt={ 14 }>
           <List>
           <ListItemButton onClick={ () => navigate('/cases')} selected={ !status }>
             <ListItemIcon>
