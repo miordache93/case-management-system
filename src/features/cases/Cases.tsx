@@ -15,7 +15,20 @@ const CasesPage: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const status = searchParams.get('status') || '';
   const [selectedItemIds, setSelectedItemIds] = useState<string[]>([]);
-  const { paginatedData, fetchCases, updateCaseStatus } = useCaseStore();
+  const [visibleColumnIds, setVisibleColumnIds] = useState<string[]>(() => {
+    const savedColumns = localStorage.getItem('visibleColumnIds');
+    return savedColumns ? JSON.parse(savedColumns) : [
+      'priority',
+      'caseName',
+      'assignee',
+      'description',
+      'status',
+      'type',
+      'dateCreated',
+      'lastUpdated'
+    ];
+  });
+  const {paginatedData, fetchCases, updateCaseStatus } = useCaseStore();
 
   const paginatedQuery: PaginatedQuery = useMemo<PaginatedQuery>(() => ({
     search: searchParams.get('search') || '',
@@ -46,6 +59,7 @@ const CasesPage: React.FC = () => {
       dataPath: 'priority',
       title: 'Priority',
       sortable: true,
+      hidden: !visibleColumnIds.includes('priority'),
       width: 200,
       // @ts-ignore
       cellRenderer: ({ item }) => (
@@ -61,12 +75,14 @@ const CasesPage: React.FC = () => {
       dataPath: 'caseName',
       title: 'Case Name',
       sortable: true,
+      hidden: !visibleColumnIds.includes('caseName'),
       width: 200,
     },
     {
       id: 'assignee',
       dataPath: 'assignee',
       title: 'Assignee',
+      hidden: !visibleColumnIds.includes('assignee'),
       sortable: true,
       width: 200,
     },
@@ -75,6 +91,7 @@ const CasesPage: React.FC = () => {
       dataPath: 'description',
       title: 'Description',
       sortable: true,
+      hidden: !visibleColumnIds.includes('description'),
       width: 800
     }, 
     // @ts-ignore
@@ -84,6 +101,7 @@ const CasesPage: React.FC = () => {
       title: 'Status',
       sortable: true,
       width: 200,
+      hidden: !visibleColumnIds.includes('status'),
       // @ts-ignore
       cellRenderer: ({ item }) => (
         <Badge
@@ -101,6 +119,7 @@ const CasesPage: React.FC = () => {
       title: 'Type',
       sortable: true,
       width: 200,
+      hidden: !visibleColumnIds.includes('type'),
       // @ts-ignore
       cellRenderer: ({ item }) => (
         <Badge
@@ -116,16 +135,18 @@ const CasesPage: React.FC = () => {
       dataPath: 'dateCreated',
       sortable: true,
       title: 'Date Created',
+      hidden: !visibleColumnIds.includes('dateCreated'),
       width: 200
     },
     {
       id: 'lastUpdated',
       dataPath: 'lastUpdated',
       title: 'Last Updated',
+      hidden: !visibleColumnIds.includes('lastUpdated'),
       sortable: true,
       width: 200
     },
-  ], []);
+  ], [visibleColumnIds]);
 
   const actions: ReadonlyArray<TableRowAction<Case>> = [
     {
@@ -148,6 +169,17 @@ const CasesPage: React.FC = () => {
     setSearchParams(searchParams);
   };
 
+  const toggleColumnVisibility = (column: Column<Case>) => {
+    const newVisibleColumnIds = visibleColumnIds.includes(column.id)
+      ? visibleColumnIds.filter((id) => id !== column.id)
+      : [...visibleColumnIds, column.id];
+
+    setVisibleColumnIds(newVisibleColumnIds);
+
+    // Persist the column visibility state to localStorage
+    localStorage.setItem('visibleColumnIds', JSON.stringify(newVisibleColumnIds));
+  };
+
   return (
     <Grid container flexDirection='column' mt={2} rowGap={2} >
       <Grid item mb={1}>
@@ -166,7 +198,7 @@ const CasesPage: React.FC = () => {
           enableBatchActions={selectedItemIds.length > 1 }
           onAcceptCases={ () => updateCaseStatus(selectedItemIds, CaseStatus.ACCEPTED) }
           onRejectCases={ () => updateCaseStatus(selectedItemIds, CaseStatus.REJECTED) }
-          toggleColumnVisibility={ () => {} }
+          toggleColumnVisibility={ toggleColumnVisibility }
         />
       </Grid>
       <Grid item width='calc(100vw - 260px)'>

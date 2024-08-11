@@ -52,7 +52,7 @@ const Table= <T extends { caseName: string, selected?: boolean}, K extends strin
                 />
               </TableCell>
             )}
-            { columns.map((column) => (
+            { columns.filter(column => !column.hidden).map((column) => (
               <TableCell
                 align='left'
                 key={ column.id }
@@ -86,7 +86,6 @@ const Table= <T extends { caseName: string, selected?: boolean}, K extends strin
               <TableRow
                 hover
                 tabIndex={ -1 }
-                // onClick={ () => goTo(item) }
               >
                   {(enableSelection && onSelectionChange) && (
                   <TableCell padding="checkbox">
@@ -97,7 +96,7 @@ const Table= <T extends { caseName: string, selected?: boolean}, K extends strin
                   </TableCell>
                 )}
                 {
-                  columns.map((column, index) => {
+                  columns.filter(column => !column.hidden).map((column, index) => {
                     const cellValue = column.cellRenderer
                     ? column.cellRenderer({ item, index })
                     : get(item, column.dataPath);
