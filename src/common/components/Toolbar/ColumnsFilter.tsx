@@ -53,13 +53,13 @@ const ColumnsFilter: React.FunctionComponent<ColumnsFilterProps> = ({
         {
           columns.map((column) => (
             <MenuItem
-              key={column.headerName}
+              key={column.title}
               onClick={() => toggleColumnVisibility(column)}
             >
               <Checkbox 
                 checked={column.visible} 
               />
-              {column.headerName}
+              {column.title.toUpperCase()}
             </MenuItem>
           ))
         }

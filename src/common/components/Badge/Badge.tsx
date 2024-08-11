@@ -1,4 +1,4 @@
-import { Chip, Color } from "@mui/material";
+import { Chip } from "@mui/material";
 
 
 interface BadgeProps {

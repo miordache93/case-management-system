@@ -1,7 +1,6 @@
 import { FunctionComponent } from "react";
 import SearchInput from "../SearchInput/SearchInput";
 import { Box } from "@mui/material";
-import { Case } from "src/features/cases/types";
 import BatchActions from "./BatchActions";
 import ColumnsFilter from "./ColumnsFilter";
 
@@ -10,15 +9,19 @@ interface ToolbarProps {
   searchText: string;
   onSearch: (text: string) => void;
   toggleColumnVisibility: (column: any) => void; 
-  selectedCases: Case[];
+  enableBatchActions: boolean;
+  onAcceptCases: () => void;
+  onRejectCases: () => void;
 }
 
 const Toolbar: FunctionComponent<ToolbarProps> = ({
   columns,
   searchText,
   onSearch,
-  selectedCases,
+  enableBatchActions,
   toggleColumnVisibility,
+  onAcceptCases,
+  onRejectCases,
 }) => {
 
   return (
@@ -29,14 +32,21 @@ const Toolbar: FunctionComponent<ToolbarProps> = ({
       rowGap={ { sm: 1, lg: 0 } }
     >
       <Box justifyContent={ { xs: 'center', sm: 'flex-start'}}>
-        <SearchInput />
+        <SearchInput 
+          value={ searchText }
+          onSearch={ onSearch }
+        />
       </Box>
       <Box
         display='flex'
         justifyContent={ { xs: 'flex-start', lg: 'space-between' } }
         columnGap={ 1 }
       >
-        <BatchActions />
+        <BatchActions 
+          enableBatchActions={enableBatchActions}
+          onAcceptCases={onAcceptCases}
+          onRejectCases={onRejectCases}
+        />
         <ColumnsFilter 
           columns={columns}
           toggleColumnVisibility={toggleColumnVisibility}

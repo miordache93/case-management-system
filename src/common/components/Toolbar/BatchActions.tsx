@@ -4,7 +4,17 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 
-const BatchActions = () => {
+interface BatchActionsProps {
+  enableBatchActions: boolean;
+  onAcceptCases: () => void;
+  onRejectCases: () => void;
+}
+
+const BatchActions: React.FunctionComponent<BatchActionsProps> = ({
+  enableBatchActions,
+  onAcceptCases,
+  onRejectCases,
+}) => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -24,6 +34,7 @@ const BatchActions = () => {
         onClick={handleClick}
         variant='contained'
         color='primary'
+        disabled={!enableBatchActions}
         endIcon={<ArrowDropDownIcon />}
       >
         Batch action
@@ -43,8 +54,14 @@ const BatchActions = () => {
           horizontal: 'right',
         }}
       >
-        <MenuItem onClick={handleClose}>Accept cases</MenuItem>
-        <MenuItem onClick={handleClose}>Reject cases</MenuItem>
+        <MenuItem onClick={() => {
+          onAcceptCases();
+          handleClose();
+        }}>Accept cases</MenuItem>
+        <MenuItem onClick={() => {
+          onRejectCases();
+          handleClose();
+        }}>Reject cases</MenuItem>
       </Menu>
     </div>
   );

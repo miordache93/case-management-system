@@ -1,9 +1,9 @@
 
 
 export enum CaseStatus {
-  IN_PROGRESS = 'in progress',
-  ACCEPTED = 'accepted',
-  REJECTED = 'rejected',
+  IN_PROGRESS = 'In progress',
+  ACCEPTED = 'Accepted',
+  REJECTED = 'Rejected',
 }
 
 export enum CasePriority {
