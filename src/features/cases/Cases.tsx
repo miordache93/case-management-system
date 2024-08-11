@@ -1,9 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Button } from '@mui/material';
 
 import { useCaseStore } from './store';
-import { PaginatedQuery } from './types';
+import { CaseStatus, PaginatedQuery } from './types';
+import { CASES_STATUS_LABEL } from './constants';
+import Toolbar from 'src/common/components/Toolbar/Toolbar';
 
 const CasesPage: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -42,23 +44,59 @@ const CasesPage: React.FC = () => {
     status,
   ]);
 
+  const columns = useMemo(() => [
+    {
+      field: 'priority',
+      headerName: 'PRIORITY',
+      width: 200,
+    },
+    {
+      field: 'caseName',
+      headerName: 'CASE NAME',
+      width: 200,
+    },
+    {
+      field: 'status',
+      headerName: 'ASSIGNEE',
+      width: 200,
+    },
+    {
+      field: 'description',
+      headerName: 'DESCRIPTION',
+      width: 200
+    }, 
+    {
+      field: 'status',
+      headerName: 'STATUS',
+      width: 200
+    },
+    {
+      field: 'type',
+      headerName: 'TYPE',
+      width: 200
+    },
+    {
+      field: 'dateCreated',
+      headerName: 'DATE CREATED',
+      width: 200
+    },
+    {
+      field: 'lastUpdated',
+      headerName: 'LAST UPDATED',
+      width: 200
+    },
+  ], []);
+
   return (
     <div>
-      <Button
-      size="small"
-        variant='contained'>
-        Columns
-      </Button>
-      <Button
-        variant='contained'
-        disabled
-        size="small"
-      >
-        Batch actions
-      </Button>
-      {
-        JSON.stringify(paginatedData)
-      }
+      <h1> { status ? CASES_STATUS_LABEL[status as CaseStatus ] : 'All Cases' }</h1>
+      <Toolbar
+        columns={columns}
+        searchText=''
+        onSearch={ () => {} }
+        selectedCases={[]}
+        toggleColumnVisibility={ () => {} }
+      />
     </div>
   );
 };
