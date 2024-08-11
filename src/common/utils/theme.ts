@@ -88,6 +88,29 @@ const theme = createTheme({
           fontFamily: 'Inter',
         },
       },
+    },
+    MuiTableHead: {
+      styleOverrides: {
+        root: {
+          backgroundColor: '#F4F7FC',
+          color: '#606F89',
+          height: 40,
+        },
+      },
+    },
+    MuiChip: {
+      styleOverrides: {
+        root: {
+          fontSize: 10,
+          fontFamily: 'Inter',
+          padding: 8,
+          borderRadius: 80,
+
+          '.MuiChip-label': {
+            fontWeight: 500,
+          }
+        }
+      }
     }
   },
 });
