@@ -33,7 +33,7 @@ const MainLayout: React.FC = () => {
               </ListItemIcon>
               <ListItemText primary="All Cases" />
             </ListItemButton>
-            <ListItemButton onClick={ () => navigate('/cases?status=pending')} selected={ status === 'pending'}>
+            <ListItemButton onClick={ () => navigate('/cases?status=in progress')} selected={ status === 'in progress'}>
               <ListItemIcon>
                 <PendingOutlinedIcon />
               </ListItemIcon>
@@ -57,9 +57,8 @@ const MainLayout: React.FC = () => {
 
       <Box
         component="main"
-        sx={{ flexGrow: 1, bgcolor: 'background.default', p: 3, marginLeft: `${drawerWidth}px` }}
+        sx={{ flexGrow: 1, bgcolor: 'background.default', pt: 1, px: 2}}
       >
-        <Toolbar />
         <Outlet />
       </Box>
     </Box>

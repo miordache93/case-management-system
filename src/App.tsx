@@ -1,7 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import MainLayout from './common/components/Layout/Layout';
-import CasesPage from './features/case/AllCases';
+import CasesPage from './features/cases/Cases';
 import { CssBaseline } from '@mui/material';
 import { ThemeProvider } from '@emotion/react';
 import theme from './common/utils/theme';

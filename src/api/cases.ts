@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { Case, PaginatedData, PaginatedQuery } from '../features/case/types';
+import { Case, PaginatedData, PaginatedQuery } from '../features/cases/types';
 
 // Fetch all cases
 export const fetchCasesApi = async (query: PaginatedQuery): Promise<PaginatedData> => {

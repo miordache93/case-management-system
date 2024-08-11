@@ -37,6 +37,7 @@ const theme = createTheme({
     },
     body1: {
       fontSize: '1rem',
+      fontWeight: 500,
     },
   },
   
@@ -61,6 +62,7 @@ const theme = createTheme({
     MuiListItemButton: {
       styleOverrides: {
         root: {
+          fontWeight: '500',
           borderRadius: '0 8px 8px 0',
           '&.Mui-selected': {
             backgroundColor: '#0A65FF',
@@ -80,6 +82,13 @@ const theme = createTheme({
         }
       }
     },
+    MuiTextField: {
+      styleOverrides: {
+        root: {
+          fontFamily: 'Inter',
+        },
+      },
+    }
   },
 });
 
