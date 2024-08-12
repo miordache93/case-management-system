@@ -1,26 +1,26 @@
 import { createTheme } from '@mui/material/styles';
+import { COLORS } from './colors';
 
 const theme = createTheme({
   palette: {
     action: {
-      disabledBackground: '#7D90B2',
+      disabledBackground: COLORS.disabled_background,
     },
     primary: {
-      main: '#0A65FF',
-      dark: '#00359C',
-      light: '#E5F1FF',
+      main: COLORS.primary_main,
+      dark: COLORS.primary_dark,
+      light: COLORS.primary_light,
     },
     secondary: {
-      main: '#2E3B52', 
+      main: COLORS.secondary_main, 
     },
     background: {
-      default: '#FFFFFF',
+      default: COLORS.background_default,
     },
     text: {
-      primary: '#2E3B52',
-      secondary: '#7D90B2',
+      primary: COLORS.text_primary,
+      secondary: COLORS.text_secondary,
     },
-    
   },
   typography: {
     allVariants: {
@@ -123,9 +123,9 @@ const theme = createTheme({
         root: {
           height: 40,
           // textWrap: 'nowrap',
-          // whiteSpace: 'nowrap',
-          // overflow: 'hidden',
+          // overflowY: 'auto',
           // textOverflow: 'ellipsis',
+          // overflowWrap: 'break-word',
         }
       }
     },

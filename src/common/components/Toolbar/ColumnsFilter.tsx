@@ -3,16 +3,19 @@ import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import { Checkbox } from '@mui/material';
+import { Column } from '../Table/types';
 
-interface ColumnsFilterProps {
-  columns: any[];
-  toggleColumnVisibility: (column: any) => void; 
+interface ColumnsFilterProps<K> {
+  columns: Column<K>[];
+  toggleColumnVisibility: (columnId: string) => void; 
 }
 
-const ColumnsFilter: React.FunctionComponent<ColumnsFilterProps> = ({
-  columns,
-  toggleColumnVisibility,
-}) => {
+const ColumnsFilter= <T extends object>(props: ColumnsFilterProps<T>) =>  {
+  const { 
+    columns,
+    toggleColumnVisibility,
+  } = props
+
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -54,7 +57,7 @@ const ColumnsFilter: React.FunctionComponent<ColumnsFilterProps> = ({
           columns.map((column) => (
             <MenuItem
               key={column.title}
-              onClick={() => toggleColumnVisibility(column)}
+              onClick={() => toggleColumnVisibility(column.id)}
             >
               <Checkbox 
                 checked={!column.hidden} 
