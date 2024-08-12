@@ -7,7 +7,7 @@ import { Case, CasePriority, CaseStatus, PaginatedQuery } from './types';
 import { CASES_STATUS_LABEL } from './constants';
 import Toolbar from 'src/common/components/Toolbar/Toolbar';
 import Table from 'src/common/components/Table/Table';
-import { Column, TableRowAction } from 'src/common/components/Table/types';
+import { CellRendererArgs, Column, TableRowAction } from 'src/common/components/Table/types';
 import Badge from 'src/common/components/Badge/Badge';
 
 const CasesPage: React.FC = () => {
@@ -15,20 +15,7 @@ const CasesPage: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const status = searchParams.get('status') || '';
   const [selectedItemIds, setSelectedItemIds] = useState<string[]>([]);
-  const [visibleColumnIds, setVisibleColumnIds] = useState<string[]>(() => {
-    const savedColumns = localStorage.getItem('visibleColumnIds');
-    return savedColumns ? JSON.parse(savedColumns) : [
-      'priority',
-      'caseName',
-      'assignee',
-      'description',
-      'status',
-      'type',
-      'dateCreated',
-      'lastUpdated'
-    ];
-  });
-  const {paginatedData, fetchCases, updateCaseStatus } = useCaseStore();
+  const {paginatedData, fetchCases, updateCaseStatus, visibleColumnIds, toggleColumnVisibility } = useCaseStore();
 
   const paginatedQuery: PaginatedQuery = useMemo<PaginatedQuery>(() => ({
     search: searchParams.get('search') || '',
@@ -50,19 +37,16 @@ const CasesPage: React.FC = () => {
     });
 
     fetchCases(paginatedQuery);
-  }, [paginatedQuery]);
+  }, [paginatedQuery, fetchCases, setSearchParams]);
 
   const columns = useMemo<Column<Case>[]>(() => [
-      // @ts-ignore
     {
       id: 'priority',
-      dataPath: 'priority',
       title: 'Priority',
       sortable: true,
       hidden: !visibleColumnIds.includes('priority'),
       width: 200,
-      // @ts-ignore
-      cellRenderer: ({ item }) => (
+      cellRenderer: ({ item }: CellRendererArgs<Case>) => (
         <Badge
           text={ item.priority.toUpperCase() }
           color={ theme.palette.common.white }
@@ -92,18 +76,15 @@ const CasesPage: React.FC = () => {
       title: 'Description',
       sortable: true,
       hidden: !visibleColumnIds.includes('description'),
-      width: 800
+      width: 392,
     }, 
-    // @ts-ignore
     {
       id: 'status',
-      dataPath: 'status',
       title: 'Status',
       sortable: true,
       width: 200,
       hidden: !visibleColumnIds.includes('status'),
-      // @ts-ignore
-      cellRenderer: ({ item }) => (
+      cellRenderer: ({ item }: CellRendererArgs<Case>) => (
         <Badge
           text={ item.status.toUpperCase() }
           color={ theme.palette.common.white }
@@ -112,16 +93,13 @@ const CasesPage: React.FC = () => {
       )
       
     },
-    // @ts-ignore
     {
       id: 'type',
-      dataPath: 'type',
       title: 'Type',
       sortable: true,
       width: 200,
       hidden: !visibleColumnIds.includes('type'),
-      // @ts-ignore
-      cellRenderer: ({ item }) => (
+      cellRenderer: ({ item }: CellRendererArgs<Case>) => (
         <Badge
           text={ item.type.toUpperCase() }
           color='#606F89'
@@ -146,7 +124,7 @@ const CasesPage: React.FC = () => {
       sortable: true,
       width: 200
     },
-  ], [visibleColumnIds]);
+  ], [visibleColumnIds, theme.palette]);
 
   const actions: ReadonlyArray<TableRowAction<Case>> = [
     {
@@ -169,17 +147,6 @@ const CasesPage: React.FC = () => {
     setSearchParams(searchParams);
   };
 
-  const toggleColumnVisibility = (column: Column<Case>) => {
-    const newVisibleColumnIds = visibleColumnIds.includes(column.id)
-      ? visibleColumnIds.filter((id) => id !== column.id)
-      : [...visibleColumnIds, column.id];
-
-    setVisibleColumnIds(newVisibleColumnIds);
-
-    // Persist the column visibility state to localStorage
-    localStorage.setItem('visibleColumnIds', JSON.stringify(newVisibleColumnIds));
-  };
-
   return (
     <Grid container flexDirection='column' mt={2} rowGap={2} >
       <Grid item mb={1}>
@@ -188,7 +155,7 @@ const CasesPage: React.FC = () => {
         </Typography>
       </Grid>
       <Grid item width='100%'>
-        <Toolbar
+        <Toolbar<Case>
           columns={columns}
           searchText={paginatedQuery.search || ''}
           onSearch={ (searchText) => {

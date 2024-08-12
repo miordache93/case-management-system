@@ -11,14 +11,14 @@ const ScrollContainer = styled('div')({
   overflow: 'auto',
 });
 
-const StickyTableHead = styled(TableHead)(({ theme }) => ({
+const StickyTableHead = styled(TableHead)(() => ({
   position: 'sticky',
   top: 0,
   zIndex: 1000,
 }));
 
-const Table= <T extends { caseName: string, selected?: boolean}, K extends string = string>(props: TableProps<T, K>)  => {
-  
+
+const Table= <T extends { caseName: string}, K extends string = string>(props: TableProps<T, K>)  => {
     const {
       columns,
       items,
@@ -38,7 +38,7 @@ const Table= <T extends { caseName: string, selected?: boolean}, K extends strin
 
     return (
       <MuiTable
-      sx={{ tableLayout: 'fixed' }} // Enforces column widths
+      sx={{ tableLayout: 'fixed' }}
       >
       <ScrollContainer>
         <StickyTableHead>
@@ -56,7 +56,11 @@ const Table= <T extends { caseName: string, selected?: boolean}, K extends strin
               <TableCell
                 align='left'
                 key={ column.id }
-                width={ column.width }
+                style={{
+                  width: column.width,
+                  minWidth: column.width,
+                  overflowY: 'auto',
+                }}
                 sortDirection={ filters.sort === column.id ? (filters.order || 'desc') : false }
                 >
                 { (column.sortable && onSort) ? (

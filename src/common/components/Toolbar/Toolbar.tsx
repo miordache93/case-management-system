@@ -1,28 +1,30 @@
-import { FunctionComponent } from "react";
 import SearchInput from "../SearchInput/SearchInput";
 import { Box } from "@mui/material";
 import BatchActions from "./BatchActions";
 import ColumnsFilter from "./ColumnsFilter";
+import { Column } from "../Table/types";
 
-interface ToolbarProps {
-  columns: any[];
+interface ToolbarProps<K> {
+  columns: Column<K>[];
   searchText: string;
   onSearch: (text: string) => void;
-  toggleColumnVisibility: (column: any) => void; 
+  toggleColumnVisibility: (columnId: string) => void; 
   enableBatchActions: boolean;
   onAcceptCases: () => void;
   onRejectCases: () => void;
 }
 
-const Toolbar: FunctionComponent<ToolbarProps> = ({
-  columns,
-  searchText,
-  onSearch,
-  enableBatchActions,
-  toggleColumnVisibility,
-  onAcceptCases,
-  onRejectCases,
-}) => {
+const Toolbar= <T extends object>(props: ToolbarProps<T>)  => {
+
+  const { 
+    columns,
+    searchText,
+    onSearch,
+    enableBatchActions,
+    toggleColumnVisibility,
+    onAcceptCases,
+    onRejectCases,
+  } = props;
 
   return (
     <Box

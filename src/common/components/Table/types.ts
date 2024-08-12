@@ -26,18 +26,12 @@ export interface TableRowAction<T> {
 export interface TableRowActionsProps<T> {
     actions: ReadonlyArray<TableRowAction<T>>;
     item: T;
-    compactMode?: boolean; // for displaying items in a menu style
+    compactMode?: boolean;
     rowIndex?: number;
 }
 
-interface BaseColumn<T = object, K extends string = string> {
-    /**
-     * Unique column id
-    */
+interface BaseColumn<T = object, K = string> {
     id: string;
-    /**
-     * Column title
-    */
     title: string;
     hidden?: boolean;
     width?: number | string;
@@ -45,8 +39,6 @@ interface BaseColumn<T = object, K extends string = string> {
     orderBy?: K;
     cellClassName?: string;
     sortable?: boolean;
-
-    // ....add more
 };
 
 interface ColumnWithRenderer<T> extends BaseColumn<T>{
